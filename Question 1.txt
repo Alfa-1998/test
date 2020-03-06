@@ -1,0 +1,554 @@
+
+User@DESKTOP-282HNT5 MINGW64 ~
+$ git clone https://github.com/compeng-utp/test.git
+Cloning into 'test'...
+remote: Enumerating objects: 51, done.
+remote: Counting objects: 100% (51/51), done.
+remote: Compressing objects: 100% (49/49), done.
+remote: Total 51 (delta 19), reused 0 (delta 0), pack-reused 0
+Unpacking objects: 100% (51/51), done.
+Checking connectivity... done.
+
+User@DESKTOP-282HNT5 MINGW64 ~
+$ cd test
+
+User@DESKTOP-282HNT5 MINGW64 ~/test (master)
+$ cat test
+cat: test: No such file or directory
+
+User@DESKTOP-282HNT5 MINGW64 ~/test (master)
+$ cd test
+bash: cd: test: No such file or directory
+
+User@DESKTOP-282HNT5 MINGW64 ~/test (master)
+$ dir test
+dir: cannot access 'test': No such file or directory
+
+User@DESKTOP-282HNT5 MINGW64 ~/test (master)
+$ touch api
+
+User@DESKTOP-282HNT5 MINGW64 ~/test (master)
+$ vi api
+
+User@DESKTOP-282HNT5 MINGW64 ~/test (master)
+$ cd api
+
+User@DESKTOP-282HNT5 MINGW64 ~/test/api (master)
+$ touch Dockerfile
+
+User@DESKTOP-282HNT5 MINGW64 ~/test/api (master)
+$ vi DockerFile
+
+User@DESKTOP-282HNT5 MINGW64 ~/test/api (master)
+$ ls DockerFile
+DockerFile
+
+User@DESKTOP-282HNT5 MINGW64 ~/test/api (master)
+$ cat Dockerfile
+FROM            python:3
+LABEL           maintainer="Ahmad"
+
+ENV             REDIS_URL="redis://localhost:6379"
+
+WORKDIR         /app
+
+COPY            requirements.txt /app/
+
+RUN             pip install -r requirements.txt
+
+COPY            *.py /app/
+
+RUN             chmod a+x *.py
+
+CMD             ["./main.py"]
+
+
+User@DESKTOP-282HNT5 MINGW64 ~/test/api (master)
+$ touch main.py
+
+User@DESKTOP-282HNT5 MINGW64 ~/test/api (master)
+$ vi main.py
+
+User@DESKTOP-282HNT5 MINGW64 ~/test/api (master)
+$ cat main.py
+
+#!/usr/bin/env python
+
+from flask import Flask
+from flask import request
+from flask import jsonify
+
+app = Flask(__name__)
+
+@app.route("/")
+def index():
+    return "Usage: http://<hostname>[:<prt>]/api/<url>"
+
+@app.route("/api/<path:url>")
+def api(url):
+         qs = request.query_string.decode("utf-8")
+         if qs != "":
+                   url += "?" + qs
+
+         links = extract_links(url)
+         return jsonify(links)
+
+         app.run(host="0.0.0.0")
+
+User@DESKTOP-282HNT5 MINGW64 ~/test/api (master)
+$ touch requirements.txt
+
+User@DESKTOP-282HNT5 MINGW64 ~/test/api (master)
+$ vi requirements.txt
+
+User@DESKTOP-282HNT5 MINGW64 ~/test/api (master)
+$ cat requirements.txt
+
+beautifulsoup4
+
+flask
+
+redis
+wikipedia
+requests
+
+User@DESKTOP-282HNT5 MINGW64 ~/test/api (master)
+$ touch wikicrawler.py
+
+User@DESKTOP-282HNT5 MINGW64 ~/test/api (master)
+$ vi wikicrawler.py
+
+User@DESKTOP-282HNT5 MINGW64 ~/test/api (master)
+$ cat wikicrawler.py
+
+#!/usr/bin/env python
+
+import wikipedia
+import sys
+import requests
+
+from bs4 import BeautifulSoup
+from urllib.parse import urljoin
+
+def extract_links(url):
+
+page = wikipedia.page(url)
+links = []
+
+for link in links:
+        print link["page"]
+        for link in page.links:
+                links.append({"text":link["page"],
+                                "href": link["page"]
+                                })
+                return links
+
+
+
+if __name__ == "__main__":
+
+          if len(sys.argv) != 2:
+
+                                                                                             p                                                                                                  rint("\nUsage:\n\t{} <URL>\n".format(sys.argv[0]))
+
+                                                                                             s                                                                                                  ys.exit(1)
+                                                                                             f                                                                                                  or link in extract_links(sys.argv[-1]):
+
+                                                                                             p                                                                                                  rint("[{}]({})".format(link["text"], link["href"]))
+
+User@DESKTOP-282HNT5 MINGW64 ~/test/api (master)
+$ vi wikicrawler.py
+
+User@DESKTOP-282HNT5 MINGW64 ~/test/api (master)
+$ cat wikicrawler.py
+
+#!/usr/bin/env python
+
+import wikipedia
+import sys
+import requests
+
+from bs4 import BeautifulSoup
+from urllib.parse import urljoin
+
+def extract_links(url):
+
+page = wikipedia.page(url)
+links = []
+
+for link in links:
+        print link["page"]
+        for link in page.links:
+                links.append({"text":link["page"],
+                                "href": link["page"]
+                                })
+                return links
+
+
+
+if __name__ == "__main__":
+
+        if len(sys.argv) != 2:
+        print("\nUsage:\n\t{} <URL>\n".format(sys.argv[0]))
+
+        sys.exit(1)
+        for link in extract_links(sys.argv[-1]):
+
+        mnsdorint("[{}]({})".format(link["text"], link["href"]))
+
+User@DESKTOP-282HNT5 MINGW64 ~/test/api (master)
+$ ls
+Dockerfile  main.py  requirements.txt  wikicrawler.py
+
+User@DESKTOP-282HNT5 MINGW64 ~/test/api (master)
+$ cd ..
+User@DESKTOP-282HNT5 MINGW64 ~/test/www (master)
+$ cat index.php
+<!DOCTYPE html>
+
+<?php
+  $api_endpoint = $_ENV["API_ENDPOINT"] ?: "http://localhost:5000/api/";
+  $url = "";
+  if(isset($_GET["url"]) && $_GET["url"] != "") {
+    $url = $_GET["url"];
+    $json = @file_get_contents($api_endpoint . $url);
+    if($json == false) {
+      $err = "Something is wrong with the URL: " . $url;
+    } else {
+      $links = json_decode($json, true);
+      $domains = [];
+      foreach($links as $link) {
+        array_push($domains, parse_url($link["href"], PHP_URL_HOST));
+      }
+      $domainct = @array_count_values($domains);
+      arsort($domainct);
+    }
+  }
+?>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Link Extractor</title>
+    <style media="screen">
+      html {
+        background: #EAE7D6;
+        font-family: sans-serif;
+      }
+      body {
+        margin: 0;
+      }
+      h1 {
+        padding: 10px;
+        margin: 0 auto;
+        color: #EAE7D6;
+        max-width: 600px;
+      }
+      h1 a {
+        text-decoration: none;
+        color: #EAE7D6;
+      }
+      h2 {
+        background: #082E41;
+        color: #EAE7D6;
+        margin: -10px;
+        padding: 10px;
+      }
+      p {
+        margin: 25px 5px 5px;
+      }
+      section {
+        max-width: 600px;
+        margin: 10px auto;
+        padding: 10px;
+        border: 1px solid #082E41;
+      }
+      div.header {
+        background: #082E41;
+        margin: 0;
+      }
+      div.footer {
+        background: #082E41;
+        margin: 0;
+        padding: 5px;
+      }
+      .footer p {
+        margin: 0 auto;
+        max-width: 600px;
+        color: #EAE7D6;
+        text-align: center;
+      }
+      .footer p a {
+        color: #24C2CB;
+        text-decoration: none;
+      }
+      .error {
+        color: #DA2536;
+      }
+      form {
+        display: flex;
+      }
+      input {
+        font-size: 20px;
+        padding: 3px;
+        height: 40px;
+      }
+      input.text {
+        box-sizing:border-box;
+        flex-grow: 1;
+        border-color: #082E41;
+      }
+      input.button {
+        width: 150px;
+        background: #082E41;
+        border-color: #082E41;
+        color: #EAE7D6;
+      }
+      table {
+        width: 100%;
+        text-align: left;
+        margin-top: 10px;
+      }
+      table th, table td {
+        padding: 3px;
+      }
+      table th:last-child, table td:last-child {
+        width: 70px;
+        text-align: right;
+      }
+      table th {
+        border-top: 1px solid #082E41;
+        border-bottom: 1px solid #082E41;
+      }
+      table tr:last-child td {
+        border-top: 1px solid #082E41;
+        border-bottom: 1px solid #082E41;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1><a href="/">Link Extractor</a></h1>
+    </div>
+
+    <section>
+      <form action="/">
+        <input class="text" type="text" name="url" placeholder="http://example.com/" value="<?php echo $url; ?>">
+        <input class="button" type="submit" value="Extract Links">
+      </form>
+    </section>
+
+    <?php if(isset($err)): ?>
+      <section>
+        <h2>Error</h2>
+        <p class="error"><?php echo $err; ?></p>
+      </section>
+    <?php endif; ?>
+
+    <?php if($url != "" && !isset($err)): ?>
+      <section>
+        <h2>Summary</h2>
+        <p>
+          <strong>Page:</strong> <?php echo "<a href=\"" . $url . "\">" . $url . "</a>"; ?>
+        </p>
+        <table>
+          <tr>
+            <th>Domain</th>
+            <th># Links</th>
+          </tr>
+          <?php
+            foreach($domainct as $key => $value) {
+              echo "<tr>";
+              echo "<td>" . $key . "</td>";
+              echo "<td>" . $value . "</td>";
+              echo "</tr>";
+            }
+          ?>
+          <tr>
+            <td><strong>Total</strong></td>
+            <td><strong><?php echo count($links); ?></strong></td>
+          </tr>
+        </table>
+      </section>
+
+      <section>
+        <h2>Links</h2>
+        <ul>
+        <?php
+          foreach($links as $link) {
+            echo "<li><a href=\"" . $link["href"] . "\">" . $link["text"] . "</a></li>";
+          }
+        ?>
+        </ul>
+      </section>
+    <?php endif; ?>
+
+    <div class="footer">
+      <p><a href="https://github.com/ibnesayeed/linkextractor">Link Extractor</a> by <a href="https://twitter.com/ibnesayeed">@ibnesayeed</a> from
+        <a href="https://ws-dl.cs.odu.edu/">WS-DL, ODU</a>
+      </p>
+    </div>
+  </body>
+</html>
+User@DESKTOP-282HNT5 MINGW64 ~/test/www (master)
+$ cd..
+bash: cd..: command not found
+
+User@DESKTOP-282HNT5 MINGW64 ~/test/www (master)
+$ cd ..
+
+User@DESKTOP-282HNT5 MINGW64 ~/test (master)
+$ cat docker-compose.yml
+
+version: '3'
+
+services:
+  api:
+    image: wikicrawler-api:step5-python
+    build: ./api
+    ports:
+      - "5000:5000"
+    environment:
+      - REDIS_URL=redis://redis:6379
+  web:
+    image: wikicrawler-web:step5-php
+    build: ./www
+    ports:
+      - "80:80"
+    environment:
+      - API_ENDPOINT=http://api:5000/api/
+  redis:
+    image: redis
+User@DESKTOP-282HNT5 MINGW64 ~/test (master)
+$ ls
+api/  docker-compose.yml  instagram.py  packetsniffer.py  README.md  wikicrawler.py  www/
+
+User@DESKTOP-282HNT5 MINGW64 ~/test (master)
+$ docker image bil -t wikicrawler:step1 .
+unknown shorthand flag: 't' in -t
+See 'docker image --help'.
+
+Usage:  docker image COMMAND
+
+Manage images
+
+Commands:
+  build       Build an image from a Dockerfile
+  history     Show the history of an image
+  import      Import the contents from a tarball to create a filesystem image
+  inspect     Display detailed information on one or more images
+  load        Load an image from a tar archive or STDIN
+  ls          List images
+  prune       Remove unused images
+  pull        Pull an image or a repository from a registry
+  push        Push an image or a repository to a registry
+  rm          Remove one or more images
+  save        Save one or more images to a tar archive (streamed to STDOUT by default)
+  tag         Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE
+
+Run 'docker image COMMAND --help' for more information on a command.
+
+
+User@DESKTOP-282HNT5 MINGW64 ~/test (master)
+$ docker image build -t wikicrawler:step1 .
+unable to prepare context: unable to evaluate symlinks in Dockerfile path: CreateFile C:\Users\User\te                                                                                          st\Dockerfile: The system cannot find the file specified.
+
+User@DESKTOP-282HNT5 MINGW64 ~/test (master)
+$ cd api
+
+User@DESKTOP-282HNT5 MINGW64 ~/test/api (master)
+$ docker-compose up -d --build
+Building api
+Step 1/9 : FROM         python:3
+ ---> f88b2f81f83a
+Step 2/9 : LABEL                maintainer="Ahmad"
+ ---> Running in 6b6e15a130f6
+Removing intermediate container 6b6e15a130f6
+ ---> c604fc916ce9
+Step 3/9 : ENV          REDIS_URL="redis://localhost:6379"
+ ---> Running in 9be9631bfa48
+Removing intermediate container 9be9631bfa48
+ ---> db06b641e65a
+Step 4/9 : WORKDIR              /app
+ ---> Running in a28be9efe41c
+Removing intermediate container a28be9efe41c
+ ---> e0479b78eeef
+Step 5/9 : COPY         requirements.txt /app/
+ ---> 889852279c91
+Step 6/9 : RUN          pip install -r requirements.txt
+ ---> Running in fa976fdb2e84
+Collecting beautifulsoup4
+  Downloading beautifulsoup4-4.8.2-py3-none-any.whl (106 kB)
+Collecting flask
+  Downloading Flask-1.1.1-py2.py3-none-any.whl (94 kB)
+Collecting redis
+  Downloading redis-3.4.1-py2.py3-none-any.whl (71 kB)
+Collecting wikipedia
+  Downloading wikipedia-1.4.0.tar.gz (27 kB)
+Collecting requests
+  Downloading requests-2.23.0-py2.py3-none-any.whl (58 kB)
+Collecting soupsieve>=1.2
+  Downloading soupsieve-2.0-py2.py3-none-any.whl (32 kB)
+Collecting click>=5.1
+  Downloading Click-7.0-py2.py3-none-any.whl (81 kB)
+Collecting itsdangerous>=0.24
+  Downloading itsdangerous-1.1.0-py2.py3-none-any.whl (16 kB)
+Collecting Jinja2>=2.10.1
+  Downloading Jinja2-2.11.1-py2.py3-none-any.whl (126 kB)
+Collecting Werkzeug>=0.15
+  Downloading Werkzeug-1.0.0-py2.py3-none-any.whl (298 kB)
+Collecting certifi>=2017.4.17
+  Downloading certifi-2019.11.28-py2.py3-none-any.whl (156 kB)
+Collecting chardet<4,>=3.0.2
+  Downloading chardet-3.0.4-py2.py3-none-any.whl (133 kB)
+Collecting urllib3!=1.25.0,!=1.25.1,<1.26,>=1.21.1
+  Downloading urllib3-1.25.8-py2.py3-none-any.whl (125 kB)
+Collecting idna<3,>=2.5
+  Downloading idna-2.9-py2.py3-none-any.whl (58 kB)
+Collecting MarkupSafe>=0.23
+  Downloading MarkupSafe-1.1.1-cp38-cp38-manylinux1_x86_64.whl (32 kB)
+Building wheels for collected packages: wikipedia
+  Building wheel for wikipedia (setup.py): started
+  Building wheel for wikipedia (setup.py): finished with status 'done'
+  Created wheel for wikipedia: filename=wikipedia-1.4.0-py3-none-any.whl size=11685 sha256=05ce7eb9995                                                                                          0b3daf60cbd6e41b740279d9ca0d76bfdb98e88be1c56b151f1fa
+  Stored in directory: /root/.cache/pip/wheels/07/93/05/72c05349177dca2e0ba31a33ba4f7907606f7ddef30351                                                                                          7c6a
+Successfully built wikipedia
+Installing collected packages: soupsieve, beautifulsoup4, click, itsdangerous, MarkupSafe, Jinja2, Wer                                                                                          kzeug, flask, redis, certifi, chardet, urllib3, idna, requests, wikipedia
+Successfully installed Jinja2-2.11.1 MarkupSafe-1.1.1 Werkzeug-1.0.0 beautifulsoup4-4.8.2 certifi-2019                                                                                          .11.28 chardet-3.0.4 click-7.0 flask-1.1.1 idna-2.9 itsdangerous-1.1.0 redis-3.4.1 requests-2.23.0 sou                                                                                          psieve-2.0 urllib3-1.25.8 wikipedia-1.4.0
+Removing intermediate container fa976fdb2e84
+ ---> a4df886e545a
+Step 7/9 : COPY         *.py /app/
+ ---> 737607d13308
+Step 8/9 : RUN          chmod a+x *.py
+ ---> Running in fe8066b25f9f
+Removing intermediate container fe8066b25f9f
+ ---> e6f94a3f2b3d
+Step 9/9 : CMD          ["./main.py"]
+ ---> Running in 487b26b1f3bb
+Removing intermediate container 487b26b1f3bb
+ ---> 9ef3630648ba
+Successfully built 9ef3630648ba
+Successfully tagged wikicrawler-api:step5-python
+Building web
+Step 1/4 : FROM       php:7-apache
+ ---> d753d5b380a1
+Step 2/4 : LABEL      maintainer="Sawood Alam <@ibnesayeed>"
+ ---> Using cache
+ ---> e38301d2161f
+Step 3/4 : ENV        API_ENDPOINT="http://localhost:5000/api/"
+ ---> Using cache
+ ---> ddc336bfc2c6
+Step 4/4 : COPY       . /var/www/html/
+ ---> aa51a2181168
+Successfully built aa51a2181168
+Successfully tagged wikicrawler-web:step5-php
+Recreating test_web_1 ... done
+Recreating test_api_1 ... done
+Starting test_redis_1 ... done
+
+User@DESKTOP-282HNT5 MINGW64 ~/test/api (master)
+$ docker container ls
+CONTAINER ID        IMAGE                       COMMAND                  CREATED             STATUS                                                                                                        PORTS                NAMES
+0faf4d996dcd        wikicrawler-web:step5-php   "docker-php-entrypoi…"   29 seconds ago      Up 28 sec                                                                                          onds       0.0.0.0:80->80/tcp   test_web_1
+4b81d42d561d        redis                       "docker-entrypoint.s…"   8 days ago          Up 28 sec                                                                                          onds       6379/tcp             test_redis_1
+
